@@ -2,7 +2,17 @@
 
 A powerful, single-file Python utility to automate your entire Git/GitHub workflow from the command line.
 
-This repository contains `gitflowapp.py`, a lightweight script that automates the common workflow of creating a repo on GitHub and pushing an existing local project to it.
+## Why GitFlowAI?
+
+GitFlowAI streamlines your development workflow by automating repetitive Git and GitHub operations. Perfect for:
+
+- **AI Agents & Automation**: Clean JSON output makes it ideal for integration with AI assistants, CI/CD pipelines, and automation scripts
+- **Rapid Development**: Execute complete workflows (create repo → branch → commit → PR) in seconds
+- **Solo Developers**: Simplify your workflow without complex Git commands
+- **Team Collaboration**: Standardize repository creation and PR workflows across your team
+- **Learning Git**: Clear, simple commands that abstract away Git complexity
+
+Instead of remembering multiple Git commands and GitHub API calls, use simple, intuitive commands that handle everything for you.
 
 ## Features
 
@@ -14,6 +24,30 @@ This repository contains `gitflowapp.py`, a lightweight script that automates th
 - **JSON output mode**: Machine-readable responses for AI/API integrations
 - **Flexible configuration**: Use environment variables, config file, or CLI arguments
 - **Minimal dependencies**: Only requires `requests` Python package
+
+## Quick Start
+
+```powershell
+# 1. Install dependencies
+pip install requests
+
+# 2. Set your GitHub token
+$env:GITHUB_TOKEN = "ghp_your_token_here"
+
+# 3. Create a repo and push your code
+python gitflowapp.py create --name my-project
+
+# 4. Make changes and commit
+python gitflowapp.py commit -m "Added new feature"
+
+# 5. Create a feature branch
+python gitflowapp.py branch -n awesome-feature
+
+# 6. Open a pull request
+python gitflowapp.py pr -t "Add awesome feature"
+```
+
+That's it! You've just automated your entire Git/GitHub workflow.
 
 ## Requirements
 
@@ -27,7 +61,7 @@ Install the Python dependency:
 pip install requests
 ```
 
-## Quick Start
+## Detailed Setup
 
 1. Get a GitHub personal access token (classic) with the `repo` scope: [GitHub personal access tokens](https://github.com/settings/tokens)
 2. Configure the token via environment variable or `github_config.json` (examples below).
