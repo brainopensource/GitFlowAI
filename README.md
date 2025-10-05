@@ -1,6 +1,6 @@
-# GitHub Repo Manager — Repository Creator
+# GitFlowAI — GitHub Workflow Automation Tool
 
-A small, single-file Python utility to create GitHub repositories via the GitHub API and optionally push local code to the new repository.
+A powerful, single-file Python utility to automate your entire Git/GitHub workflow from the command line.
 
 This repository contains `gitflowapp.py`, a lightweight script that automates the common workflow of creating a repo on GitHub and pushing an existing local project to it.
 
