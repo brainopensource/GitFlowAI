@@ -46,21 +46,46 @@ export GITHUB_TOKEN=ghp_your_token_here
 
 ### Option: `github_config.json`
 
-You can create a `github_config.json` in the project directory to provide defaults. Example:
+You can create a `github_config.json` in the project directory to provide defaults and avoid passing arguments every time.
 
-```json
-{
-  "github_token": "ghp_your_token_here",
-  "repo_name": "my-project",
-  "description": "My project description",
-  "private": false,
-  "push_code": true,
-  "local_path": "",
-  "branch": "main"
-}
-```
+#### Setup Instructions
 
-> Security: Never commit a real token to version control. Keep `github_config.json` out of committed sources.
+1. **Copy the example file**: The repository includes `github_config_example.json` as a template. Copy and rename it:
+   
+   ```powershell
+   Copy-Item github_config_example.json github_config.json
+   ```
+
+2. **Edit your configuration**: Open `github_config.json` and add your GitHub personal access token and default settings:
+
+   ```json
+   {
+     "github_token": "ghp_your_token_here",
+     "repo_name": "my-project",
+     "description": "My project description",
+     "private": false,
+     "push_code": true,
+     "local_path": "",
+     "branch": "main"
+   }
+   ```
+
+3. **Configuration options explained**:
+   - `github_token` (string, required): Your GitHub personal access token with `repo` scope
+   - `repo_name` (string, optional): Default repository name (can be overridden with `--name`)
+   - `description` (string, optional): Default repository description (can be overridden with `--description`)
+   - `private` (boolean, optional): Make repositories private by default (can be overridden with `--private`)
+   - `push_code` (boolean, optional): Whether to push code by default (can be overridden with `--no-push`)
+   - `local_path` (string, optional): Default local path to push (empty string = current directory)
+   - `branch` (string, optional): Default branch name (can be overridden with `--branch`)
+
+4. **Security note**: The `github_config.json` file is automatically ignored by git (via `.gitignore`). Never commit your real token to version control. The example file is provided for reference only.
+
+**Why use a config file?**
+
+- Avoid typing your token or common settings repeatedly
+- Set project-specific defaults
+- Simplify commands: `python gitflowapp.py create` instead of `python gitflowapp.py create --name my-project --description "..." --private`
 
 ## Usage
 

@@ -1,5 +1,5 @@
 {
-  "github_token": "TOKEN",
+  "github_token": "GITHUB_TOKEN_CLASSIC",
   "repo_name": "AIGitFlow",
   "description": "Description of my new repository",
   "private": false,
