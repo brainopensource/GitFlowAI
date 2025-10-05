@@ -6,11 +6,14 @@ This repository contains `gitflowapp.py`, a lightweight script that automates th
 
 ## Features
 
-- Create public or private repositories using the GitHub API
-- Optionally initialize a local git repo, stage, commit and push code
-- Configurable via environment variables, a `github_config.json` file, or CLI arguments
-- JSON output mode for machine-readable responses
-- Minimal dependencies (only `requests`)
+- **Create repositories**: Create public or private repositories using the GitHub API
+- **Push code**: Initialize local git repo, stage, commit and push code to GitHub
+- **Commit changes**: Commit and push changes with custom messages
+- **Create branches**: Create and push new branches for feature development
+- **Open pull requests**: Create PRs directly from the command line
+- **JSON output mode**: Machine-readable responses for AI/API integrations
+- **Flexible configuration**: Use environment variables, config file, or CLI arguments
+- **Minimal dependencies**: Only requires `requests` Python package
 
 ## Requirements
 
@@ -89,14 +92,14 @@ You can create a `github_config.json` in the project directory to provide defaul
 
 ## Usage
 
-The repository includes two main commands (via `gitflowapp.py`): `create` and `push`.
+GitFlowAI includes five main commands: `create`, `push`, `commit`, `branch`, and `pr`.
 
-Create a new repository (and push current directory):
+### Create a new repository
 
-PowerShell example (current directory):
+Create and push to a new GitHub repository:
 
 ```powershell
-python create_github_repo.py create --name my-project
+python gitflowapp.py create --name my-project
 ```
 
 Create without pushing code:
@@ -105,33 +108,117 @@ Create without pushing code:
 python gitflowapp.py create --name my-project --no-push
 ```
 
-Create and push a specific path (Windows example):
+Create a private repository with description:
 
 ```powershell
-python gitflowapp.py create --name my-app --path "E:\Code\MyApp" --branch main
+python gitflowapp.py create --name my-app --description "My awesome app" --private
 ```
 
-Get JSON output:
+### Push to an existing repository
+
+Push local code to an existing GitHub repository:
 
 ```powershell
-python gitflowapp.py create --name my-app --json
+python gitflowapp.py push --name existing-repo
 ```
 
-Push an existing local directory to an already-created GitHub repository:
+### Commit and push changes
+
+Commit all changes and push to current branch:
 
 ```powershell
-python gitflowapp.py push --name existing-repo --path "E:\Code\Project"
+python gitflowapp.py commit -m "Fixed authentication bug"
+```
+
+Commit to a specific branch:
+
+```powershell
+python gitflowapp.py commit -m "Add new feature" --branch feature-x
+```
+
+### Create a new branch
+
+Create a new branch and push it to GitHub:
+
+```powershell
+python gitflowapp.py branch -n feature-auth
+```
+
+### Create a pull request
+
+Create a PR from current branch to main:
+
+```powershell
+python gitflowapp.py pr -t "Add authentication" -b "This PR adds user authentication"
+```
+
+Create a PR to a different base branch:
+
+```powershell
+python gitflowapp.py pr -t "Bug fix" --base develop
+```
+
+### JSON output mode
+
+Add `--json` flag before any command for machine-readable output:
+
+```powershell
+python gitflowapp.py --json commit -m "Update README"
+python gitflowapp.py --json branch -n new-feature
+python gitflowapp.py --json pr -t "New feature"
+```
+
+Example JSON output:
+
+```json
+{
+  "action": "commit",
+  "status": "success",
+  "message": "Update README",
+  "branch": "main",
+  "repository": "GitFlowAI",
+  "url": "https://github.com/username/GitFlowAI"
+}
 ```
 
 ## Command options (summary)
 
-- `--name, -n`: Repository name (required for `create` and `push`)
-- `--description, -d`: Repository description (create)
-- `--private, -p`: Make repository private (create)
-- `--no-push`: Create repo but do not push local code (create)
+### Global options
+
+- `--json`: Output machine-readable JSON (use before command name)
+
+### `create` command
+
+- `--name, -n`: Repository name (required)
+- `--description, -d`: Repository description
+- `--private, -p`: Make repository private
+- `--no-push`: Create repo but do not push local code
 - `--path`: Local directory path (default: current directory)
-- `--branch, -b`: Branch name to push (default: `main`)
-- `--json`: Output machine-readable JSON
+- `--branch, -b`: Branch name (default: `main`)
+
+### `push` command
+
+- `--name, -n`: Repository name (required)
+- `--path`: Local directory path (default: current directory)
+- `--branch, -b`: Branch name (default: `main`)
+
+### `commit` command
+
+- `--message, -m`: Commit message (required)
+- `--path`: Local directory path (default: current directory)
+- `--branch, -b`: Branch to push to (default: current branch)
+
+### `branch` command
+
+- `--name, -n`: Branch name (required)
+- `--path`: Local directory path (default: current directory)
+
+### `pr` command
+
+- `--title, -t`: Pull request title (default: formatted branch name)
+- `--body, -b`: Pull request description
+- `--base`: Base branch for PR (default: `main`)
+- `--path`: Local directory path (default: current directory)
 
 Consult the script's `--help` for the full list and precise CLI behavior:
 
@@ -141,8 +228,11 @@ python gitflowapp.py --help
 
 ## How it works (high level)
 
-- `create` calls the GitHub API to create a repository, initializes git locally if needed, commits files, and pushes to the new remote (unless `--no-push` is passed).
-- `push` will push a local directory to an existing GitHub repository (useful if you already created the repo separately).
+- **`create`**: Calls the GitHub API to create a repository, initializes git locally if needed, commits files, and pushes to the new remote (unless `--no-push` is passed).
+- **`push`**: Pushes a local directory to an existing GitHub repository (useful if you already created the repo separately).
+- **`commit`**: Stages all changes, commits with your custom message, and pushes to the current or specified branch.
+- **`branch`**: Creates a new branch locally, switches to it, and pushes it to GitHub.
+- **`pr`**: Creates a pull request from the current branch to a base branch (default: main) using the GitHub API.
 
 ## Troubleshooting
 
@@ -159,19 +249,57 @@ python gitflowapp.py --help
 
 ## Examples
 
-Start a new project and push current folder:
+### Complete workflow example
 
 ```powershell
-mkdir my-project; cd my-project
+# 1. Create a new repository and push code
+python gitflowapp.py create --name my-awesome-app --description "An awesome application"
+
+# 2. Make some changes to your code, then commit
+python gitflowapp.py commit -m "Added user authentication"
+
+# 3. Create a new feature branch
+python gitflowapp.py branch -n feature-payment
+
+# 4. Make changes and commit to the feature branch
+# ... edit your files ...
+python gitflowapp.py commit -m "Implemented payment gateway"
+
+# 5. Create a pull request
+python gitflowapp.py pr -t "Add payment feature" -b "This PR adds Stripe payment integration"
+```
+
+### Using JSON mode for automation
+
+```powershell
+# Create repo and capture JSON output
+$result = python gitflowapp.py --json create --name auto-deploy | ConvertFrom-Json
+Write-Host "Repository created at: $($result.url)"
+
+# Commit changes and parse result
+$commit = python gitflowapp.py --json commit -m "Deploy v1.0" | ConvertFrom-Json
+if ($commit.status -eq "success") {
+    Write-Host "Successfully deployed to $($commit.branch)"
+}
+```
+
+### Start a new project
+
+```powershell
+# Create project directory
+mkdir my-project
+cd my-project
 echo "# My Project" > README.md
+
+# Create repo and push
 python ..\gitflowapp.py create --name my-project
 ```
 
-Push an existing local project to an existing GitHub repo:
+### Push an existing project
 
 ```powershell
 cd E:\Code\ExistingProject
-python ..\gitflowapp.py push --name existing-repo
+python gitflowapp.py push --name existing-repo
 ```
 
 ## License
