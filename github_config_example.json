@@ -1,0 +1,10 @@
+{
+  "github_token": "TOKEN",
+  "repo_name": "AIGitFlow",
+  "description": "Description of my new repository",
+  "private": false,
+  "push_code": true,
+  "local_path": "",
+  "branch": "main",
+  "_comment": "Leave 'local_path' empty to use current directory, or specify a path like 'E:\\Code\\MyProject'"
+}
